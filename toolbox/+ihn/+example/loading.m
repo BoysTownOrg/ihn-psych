@@ -20,6 +20,9 @@ function data = loadFile(path) %#ok<INUSD>
 % i.e.
 %
 % data = audioread(path);
+% 
+% or
+%
 % data = Screen('MakeTexture', window.pointer, imread(path)));
 
 % Simulate I/O delay
