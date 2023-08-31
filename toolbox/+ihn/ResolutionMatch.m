@@ -1,24 +1,22 @@
 classdef ResolutionMatch < handle
-    properties (Constant)
-        primaryScreen = 0
-    end
-
     properties
         primaryResolution
+        primaryScreen
         changed
     end
 
     methods
         function self = ResolutionMatch
-            self.primaryResolution = Screen('Resolution', self.primaryScreen);
-            self.changed = false;
-
             screens = Screen('Screens');
             if numel(screens) < 2
                 return
             end
 
             propixxScreen = max(screens);
+            self.primaryScreen = propixxScreen - 1;
+            self.primaryResolution = Screen('Resolution', self.primaryScreen);
+            self.changed = false;
+
             propixxResolution = Screen('Resolution', propixxScreen);
             if self.primaryResolution.hz ~= propixxResolution.hz
                 Screen('Resolution', self.primaryScreen, self.primaryResolution.width, self.primaryResolution.height, propixxResolution.hz);
