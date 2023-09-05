@@ -50,8 +50,8 @@ while GetSecs() - s < durationSeconds - 1.5/frameRateHz
 end
 end
 
-function blocking(~, durationSeconds, frameRateHz)
-WaitSecs(durationSeconds - 0.5/frameRateHz);
+function blocking(~, durationSeconds, ~)
+WaitSecs(durationSeconds);
 end
 
 function metrics(name, elapsed, target)
