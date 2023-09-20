@@ -16,7 +16,7 @@ jobs:
       - name: package toolbox
         uses: matlab-actions/run-command@v1
         with:
-          command: package("v${{ steps.get_version.outputs.VERSION }}", "ihn-psych.mltbx")
+          command: package("${{ steps.get_version.outputs.VERSION }}", "ihn-psych.mltbx")
       - name: create GitHub release
         run: |
           gh release create v${{ steps.get_version.outputs.VERSION }} ihn-psych.mltbx
