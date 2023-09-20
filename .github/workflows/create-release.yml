@@ -8,11 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Get the version
+      - name: get version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
-      - name: Set up MATLAB
+      - name: set up MATLAB
         uses: matlab-actions/setup-matlab@v1
+      - name: package toolbox
+        uses: matlab-actions/run-command@v1
+        with:
+          command: package("v${{ steps.get_version.outputs.VERSION }}", "ihn-psych.mltbx")
       - name: create GitHub release
         run: |
           gh release create v${{ steps.get_version.outputs.VERSION }} ihn-psych.mltbx
