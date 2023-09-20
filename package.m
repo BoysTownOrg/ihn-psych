@@ -7,5 +7,6 @@ opts.OutputFile = outputPath;
 opts.ToolboxVersion = version;
 opts.AuthorName = "Boys Town";
 opts.AuthorCompany = "Boys Town";
+opts.ToolboxMatlabPath = toolboxFolder;
 matlab.addons.toolbox.packageToolbox(opts);
 end
