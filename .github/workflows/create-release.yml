@@ -1,0 +1,20 @@
+on:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+jobs:
+  release:
+    name: create release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v1
+      - name: create GitHub release
+        run: |
+          gh release create v${{ steps.get_version.outputs.VERSION }} ihn-psych.mltbx
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
