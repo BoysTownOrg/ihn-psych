@@ -1,13 +1,15 @@
 function bench
 window = ihn.createWindowForPropixx();
-durationSeconds = 0.5;
-iterations = 10;
+durationSeconds = 0.25;
+iterations = 5;
 candidate(1).name = 'trustGPU';
 candidate(1).f = @trustGPU;
 candidate(2).name = 'trustCPU';
 candidate(2).f = @trustCPU;
 candidate(3).name = 'blocking';
 candidate(3).f = @blocking;
+candidate(4).name = 'flippingWhen';
+candidate(4).f = @flippingWhen;
 comparisons = 5;
 for j = 1:comparisons
     stream = RandStream('mt19937ar', 'Seed', 'Shuffle');
@@ -50,8 +52,12 @@ while GetSecs() - s < durationSeconds - 1.5/frameRateHz
 end
 end
 
-function blocking(~, durationSeconds, ~)
-WaitSecs(durationSeconds);
+function blocking(~, durationSeconds, frameRateHz)
+WaitSecs(durationSeconds - 0.25/frameRateHz);
+end
+
+function flippingWhen(window, durationSeconds, frameRateHz)
+Screen('Flip', window.pointer, GetSecs() + durationSeconds - 1/frameRateHz);
 end
 
 function metrics(name, elapsed, target)
