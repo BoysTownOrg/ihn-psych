@@ -1,5 +1,5 @@
 function trials
-window = ihn.createWindowForPropixx();
+window = ihn.createMEGWindow();
 
 % ihn.runAllTrials expects trials to be any collection with paren indexing. Create some trials each with a word to present.
 trials(3).word = 'who';

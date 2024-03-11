@@ -4,6 +4,7 @@ if nargin < 1
     deviceName = 'SPL Crimson';
 end
 
+InitializePsychSound();
 index = ihn.findAudioDeviceIndex(deviceName);
 Fs = 48000;
 playback = ihn.StereoAudioPlayback(index, Fs);

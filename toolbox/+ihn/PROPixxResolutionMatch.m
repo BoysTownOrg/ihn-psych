@@ -1,4 +1,4 @@
-classdef ResolutionMatch < handle
+classdef PROPixxResolutionMatch < handle
     properties
         primaryResolution
         primaryScreen
@@ -6,7 +6,7 @@ classdef ResolutionMatch < handle
     end
 
     methods
-        function self = ResolutionMatch
+        function self = PROPixxResolutionMatch
             screens = Screen('Screens');
             if numel(screens) < 2
                 return

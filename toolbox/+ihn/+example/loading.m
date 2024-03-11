@@ -1,5 +1,5 @@
 function loading
-window = ihn.createWindowForPropixx();
+window = ihn.createMEGWindow();
 filePaths = collectFilePaths();
 cache = ihn.Cache(filePaths, @(path)loadFile(path), @(i)updateWindow(window, i, numel(filePaths)));
 

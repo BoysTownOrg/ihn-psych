@@ -1,5 +1,5 @@
 function bench
-window = ihn.createWindowForPropixx();
+window = ihn.createMEGWindow();
 durationSeconds = 0.25;
 iterations = 5;
 candidate(1).name = 'trustGPU';
