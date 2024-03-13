@@ -1,5 +1,7 @@
 function runHighPriorityTask(trialFunction, trials, options)
     arguments
+        trialFunction
+        trials
         options.timeoutSeconds = inf
         options.preFunction = @()[]
         options.halfwayFunction = @()[]
