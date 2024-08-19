@@ -4,11 +4,13 @@ classdef StereoAudioPlayback < handle
     end
 
     methods
-        function self = StereoAudioPlayback(index, fs)
+        function self = StereoAudioPlayback(index, fs, varargin)
+            parser = inputParser;
+            parser.addParameter('aggressiveness', 4);
+            parser.parse(varargin{:});
             playback = 1;
-            aggressive = 4;
             stereo = 2;
-            self.handle = PsychPortAudio('Open', index, playback, aggressive, fs, stereo);
+            self.handle = PsychPortAudio('Open', index, playback, parser.Results.aggressiveness, fs, stereo);
         end
 
         function delete(self)
