@@ -1,7 +1,10 @@
 classdef VisualTask < handle
-    properties
+    properties (Access = private)
         windowPtr
         visuals
+        mid
+        post
+        trigger
         vbl
         seconds
         frameRateHz
@@ -15,6 +18,14 @@ classdef VisualTask < handle
             self.windowPtr = windowPtr;
         end
 
+        function run(self, trials)
+            ihn.runHighPriorityTask(@self.trialFunction, trials, ...
+                'halfwayFunction', @self.halfwayFunction, ...
+                'postFunction', @self.postFunction);
+        end
+    end
+
+    methods (Access = private)
         function flip(self)
             halfFrameSeconds = 0.5/self.frameRateHz;
             self.vbl = Screen('Flip', self.windowPtr, self.vbl + self.seconds - halfFrameSeconds);
