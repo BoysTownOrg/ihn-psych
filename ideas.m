@@ -1,23 +1,46 @@
-run(1:numel(trials), {
-	@drawFixation, 60, @(i)JitterLengths(i) 
-	@drawTarget, @(i)trial_index.target_trigger(i), TargetDur}, {
-	@drawFixation, 60, JitterLengths(1)})
+classdef VisualTask < handle
+    properties
+        windowPtr
+        visuals
+        vbl
+        seconds
+        frameRateHz
+    end
 
-%%%
+    methods
+        function self = VisualTask(windowPtr)
+            self.frameRateHz = Screen('FrameRate', windowPtr);
+            self.vbl = Screen('Flip', windowPtr);
+            self.seconds = 0;
+            self.windowPtr = windowPtr;
+        end
 
-frameRateHz = Screen('FrameRate', wp);
-vbl = Screen('Flip', wp);
-secs = 0;
-for trial = trials
-    for visual = visuals
-	visual.draw(trial);
-	vbl = Screen('Flip', wp, vbl + secs - 0.5/frameRateHz);
-	trigger.write(visual.code(trial));
-	secs = visual.seconds(trial);
+        function flip(self)
+            halfFrameSeconds = 0.5/self.frameRateHz;
+            self.vbl = Screen('Flip', self.windowPtr, self.vbl + self.seconds - halfFrameSeconds);
+        end
+
+        function trialFunction(self, trial)
+            for visual = self.visuals
+                visual.draw(trial);
+                self.flip;
+                self.trigger.write(visual.code(trial));
+                self.seconds = visual.seconds(trial);
+            end
+        end
+
+        function halfwayFunction(self)
+            self.mid.draw;
+            self.flip;
+            self.seconds = mid.seconds;
+        end
+
+        function postFunction(self)
+            self.post.draw;
+            self.flip;
+            self.trigger.write(post.code)
+            self.seconds = post.seconds;
+            self.flip;
+        end
     end
 end
-post.draw;
-vbl = Screen('Flip', wp, vbl + secs - 0.5/frameRateHz);
-trigger.write(post.code)
-Screen('Flip', wp, vbl + post.seconds - 0.5/frameRateHz);
-
