@@ -172,13 +172,13 @@ ihn.runHighPriorityTask(@runTrial, 1:TrialNum, 'halfwayFunction', @showBreak, 'p
 
 Screen('TextSize', window.pointer, 60);
 task = ihn.VisualTask(window.pointer);
-task.add(@fixation, @(i)cond_table.Fixation(i)/1000, 60);
-task.add(@encoding, EncDur, @(i)cond_table.RetTrigger(i));
-task.add(@maintenance, MaintDur);
-task.add(@retrieval, RetDur, @(i)cond_table.RetTrigger(i));
+task.addToTrial(@fixation, @(i)cond_table.Fixation(i)/1000, 60);
+task.addToTrial(@encoding, EncDur, @(i)cond_table.RetTrigger(i));
+task.addToTrial(@maintenance, MaintDur);
+task.addToTrial(@retrieval, RetDur, @(i)cond_table.RetTrigger(i));
 task.middle(@rest, 15);
 task.after(@fixation, cond_table.Fixation(1)/1000, 60);
-task.run;
+task.run(1:TrialNum);
 
     function showBreak()
         %Halfway point break
