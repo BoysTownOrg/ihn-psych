@@ -3,13 +3,12 @@ if nargin < 2
     trialPath = 'Trial_Info_Flanker.csv';
 end
 if nargin < 1
-    trigger = ihn.createSerialPort();
+    trigger = ihn.BioSemi();
 end
 trialTable = readtable(trialPath);
 trials = arrayfun(@(row)convertRowToTrial(trialTable(row, :)), 1:height(trialTable));
 
-window = ihn.createWindowForPropixx();
-frameRateHz = Screen('FrameRate', window.pointer);
+window = ihn.createMEGWindow();
 
 % First call to DrawFormattedText is slow
 DrawFormattedText(window.pointer, 'Loading...', 'center', 'center', [255, 255, 255]);
@@ -18,7 +17,7 @@ textureCache = ihn.Cache(...
     [arrayfun(@(trial)string(trial.imageName), trials), "Practice_Instructions.tif", "Fixation.tif", "Break.tif", "End.tif"],...
     @(path)Screen('MakeTexture', window.pointer, imread(fullfile('image', path))));
 
-task = ihn.VisualTask(window.pointer);
+task = ihn.VisualTask(window.pointer, trigger);
 task.addToTrial(@fixation, @(trial)trial.baselineMilliseconds/1000, 30);
 task.addToTrial(@stimulus, 2, @(trial)trial.trigger);
 task.before(@instructions, 5);

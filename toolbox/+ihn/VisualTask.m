@@ -1,10 +1,10 @@
 classdef VisualTask < handle
     properties (Access = private)
         windowPtr
-        visuals
-        pre
-        mid
-        post
+        trialVisuals
+        preVisual
+        midVisual
+        postVisual
         trigger
         vbl
         seconds
@@ -12,34 +12,36 @@ classdef VisualTask < handle
     end
 
     methods
-        function self = VisualTask(windowPtr)
+        function self = VisualTask(windowPtr, trigger)
+            if nargin < 2
+                trigger = ihn.SerialPortStub;
+            end
+
             self.frameRateHz = Screen('FrameRate', windowPtr);
-            self.vbl = Screen('Flip', windowPtr);
             self.seconds = 0;
             self.windowPtr = windowPtr;
-            self.visuals = struct(['draw', {}, 'seconds', {}, 'trigger', {}]);
-            self.pre = struct([]);
-            self.mid = struct([]);
-            self.post = struct([]);
+            self.trialVisuals = struct('draw', {}, 'seconds', {}, 'trigger', {});
+            self.trigger = trigger;
         end
 
         function addToTrial(self, varargin)
-            self.visuals(end+1) = self.makeVisual(varargin{:});
+            self.trialVisuals(end+1) = self.makeVisual(varargin{:});
         end
 
-        function before(self, varargin)
-            self.pre = self.makeVisual(varargin{:});
+        function before(self, draw, varargin)
+            self.preVisual = self.makeVisual(@(~)draw(), varargin{:});
         end
 
-        function middle(self, varargin)
-            self.mid = self.makeVisual(varargin{:});
+        function middle(self, draw, varargin)
+            self.midVisual = self.makeVisual(@(~)draw(), varargin{:});
         end
 
-        function after(self, varargin)
-            self.post = self.makeVisual(varargin{:});
+        function after(self, draw, varargin)
+            self.postVisual = self.makeVisual(@(~)draw(), varargin{:});
         end
 
         function run(self, trials)
+            self.vbl = Screen('Flip', self.windowPtr);
             ihn.runHighPriorityTask(@self.trialFunction, trials, ...
                 'preFunction', @self.preFunction, ...
                 'halfwayFunction', @self.halfwayFunction, ...
@@ -70,27 +72,27 @@ classdef VisualTask < handle
         end
 
         function trialFunction(self, trial)
-            for visual = self.visuals
+            for visual = self.trialVisuals
                 self.runVisual(visual, trial);
             end
         end
 
         function preFunction(self)
-            self.runVisual(self.pre, []);
+            self.runVisual(self.preVisual, []);
         end
  
         function halfwayFunction(self)
-            self.runVisual(self.mid, []);
+            self.runVisual(self.midVisual, []);
         end
 
         function postFunction(self)
-            self.runVisual(self.post, []);
+            self.runVisual(self.postVisual, []);
             self.flip;
         end
 
         function runVisual(self, visual, data)
             if ~isempty(visual)
-                visual.draw();
+                visual.draw(data);
                 self.flip;
                 code = visual.trigger(data);
                 if ~isnan(code)
