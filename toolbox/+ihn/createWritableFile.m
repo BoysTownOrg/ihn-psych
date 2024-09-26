@@ -11,5 +11,5 @@ if ~overwrite && exist(path, 'file') ~= 0
     error('File already exists: %s', path);
 end
 
-file = ihn.WritableFile(outputFilePath);
+file = ihn.WritableFile(path);
 end
