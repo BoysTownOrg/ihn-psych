@@ -1,7 +1,7 @@
 function audio(deviceName)
 if nargin < 1
     % audio device used in MEG room
-    deviceName = 'SPL Crimson';
+    deviceName = ihn.AudioDeviceName.bothMeg;
 end
 
 InitializePsychSound();
@@ -25,10 +25,6 @@ end
 function playBlocking(playback)
 waitForStart = 1;
 PsychPortAudio('Start', playback.handle, [], [], waitForStart);
-while true
-    status = PsychPortAudio('GetStatus', playback.handle);
-    if ~status.Active
-        return
-    end
-end
+waitForEnd = 1;
+PsychPortAudio('Stop', playback.handle, waitForEnd);
 end

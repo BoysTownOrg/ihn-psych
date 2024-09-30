@@ -57,7 +57,7 @@ WaitSecs(durationSeconds - 0.25/frameRateHz);
 end
 
 function flippingWhen(window, durationSeconds, frameRateHz)
-Screen('Flip', window.pointer, GetSecs() + durationSeconds - 1/frameRateHz);
+Screen('Flip', window.pointer, GetSecs() + durationSeconds - 1.5/frameRateHz);
 end
 
 function metrics(name, elapsed, target)
